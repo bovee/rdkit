@@ -9,6 +9,7 @@
 //  of the RDKit source tree.
 //
 #define PY_ARRAY_UNIQUE_SYMBOL rddatastructs_array_API
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 
 #include <boost/python.hpp>
 #include <RDBoost/Wrap.h>
@@ -42,7 +43,11 @@ void convertToNumpyArray(const T &v,python::object destArray){
   dims.len=1;
   PyArray_Resize(destP,&dims,0,NPY_ANYORDER);
   for(unsigned int i=0;i<v.size();++i){
-    PyObject *iItem = PyInt_FromLong(v[i]);
+    #if PY_MAJOR_VERSION >= 3
+      PyObject *iItem = PyLong_FromLong(v[i]);
+    #else
+      PyObject *iItem = PyInt_FromLong(v[i]);
+    #endif
     PyArray_SETITEM(destP,PyArray_GETPTR1(destP,i),iItem);
   }
 }

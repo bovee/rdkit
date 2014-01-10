@@ -13,7 +13,7 @@
 """ A module for molecules and stuff
 
  see Chem/index.html in the doc tree for documentation
- 
+
 """
 from rdkit import rdBase
 from rdkit import RDConfig
@@ -22,45 +22,49 @@ from rdkit import DataStructs
 from rdkit.Geometry import rdGeometry
 import PeriodicTable as pyPeriodicTable
 import rdchem
-_HasSubstructMatchStr=rdchem._HasSubstructMatchStr
+_HasSubstructMatchStr = rdchem._HasSubstructMatchStr
 from rdchem import *
 from rdmolfiles import *
 from rdmolops import *
 from inchi import *
 
-def QuickSmartsMatch(smi,sma,unique=True,display=False):
-  m = MolFromSmiles(smi)
-  p = MolFromSmarts(sma)
-  res = m.GetSubstructMatches(p,unique)
-  if display:
-    pass
-  return res  
 
-def CanonSmiles(smi,useChiral=1):
-  m = MolFromSmiles(smi)
-  return MolToSmiles(m,useChiral)
+def QuickSmartsMatch(smi, sma, unique=True, display=False):
+    m = MolFromSmiles(smi)
+    p = MolFromSmarts(sma)
+    res = m.GetSubstructMatches(p, unique)
+    if display:
+        pass
+    return res
 
-def SupplierFromFilename(fileN,delim='',**kwargs):
-  ext = fileN.split('.')[-1].lower()
-  if ext=='sdf':
-    suppl = SDMolSupplier(fileN,**kwargs)
-  elif ext=='csv':
-    if not delim:
-      delim = ','
-    suppl = SmilesMolSupplier(fileN,delimiter=delim,**kwargs)
-  elif ext=='txt':
-    if not delim:
-      delim='\t'
-    suppl = SmilesMolSupplier(fileN,delimiter=delim,**kwargs)
-  elif ext=='tdt':
-    suppl = TDTMolSupplier(fileN,delimiter=delim,**kwargs)
-  else:
-    raise ValueError,"unrecognized extension: %s"%ext
-    
-  return suppl
 
-def FindMolChiralCenters(mol,force=True,includeUnassigned=False):
-  """
+def CanonSmiles(smi, useChiral=1):
+    m = MolFromSmiles(smi)
+    return MolToSmiles(m, useChiral)
+
+
+def SupplierFromFilename(fileN, delim='', **kwargs):
+    ext = fileN.split('.')[-1].lower()
+    if ext == 'sdf':
+        suppl = SDMolSupplier(fileN, **kwargs)
+    elif ext == 'csv':
+        if not delim:
+            delim = ','
+        suppl = SmilesMolSupplier(fileN, delimiter=delim, **kwargs)
+    elif ext == 'txt':
+        if not delim:
+            delim = '\t'
+        suppl = SmilesMolSupplier(fileN, delimiter=delim, **kwargs)
+    elif ext == 'tdt':
+        suppl = TDTMolSupplier(fileN, delimiter=delim, **kwargs)
+    else:
+        raise ValueError("unrecognized extension: %s" % ext)
+
+    return suppl
+
+
+def FindMolChiralCenters(mol, force=True, includeUnassigned=False):
+    """
     >>> from rdkit import Chem
     >>> mol = Chem.MolFromSmiles('[C@H](Cl)(F)Br')
     >>> FindMolChiralCenters(mol)
@@ -68,7 +72,7 @@ def FindMolChiralCenters(mol,force=True,includeUnassigned=False):
     >>> mol = Chem.MolFromSmiles('[C@@H](Cl)(F)Br')
     >>> FindMolChiralCenters(mol)
     [(0, 'S')]
-  
+
     >>> FindMolChiralCenters(Chem.MolFromSmiles('CCC'))
     []
 
@@ -86,27 +90,28 @@ def FindMolChiralCenters(mol,force=True,includeUnassigned=False):
     [(2, '?'), (6, '?')]
     >>> Chem.FindMolChiralCenters(Chem.MolFromSmiles('C1C[C@H](C)C(C)[C@H](C)C1'),includeUnassigned=True)
     [(2, 'S'), (6, 'R')]
-    
-  """
-  AssignStereochemistry(mol,force=force, flagPossibleStereoCenters=includeUnassigned)
-  centers = []
-  for atom in mol.GetAtoms():
-    if atom.HasProp('_CIPCode'):
-      centers.append((atom.GetIdx(),atom.GetProp('_CIPCode')))
-    elif includeUnassigned and atom.HasProp('_ChiralityPossible'):
-      centers.append((atom.GetIdx(),'?'))
-  return centers
+
+    """
+    AssignStereochemistry(mol, force=force, flagPossibleStereoCenters=includeUnassigned)
+    centers = []
+    for atom in mol.GetAtoms():
+        if atom.HasProp('_CIPCode'):
+            centers.append((atom.GetIdx(), atom.GetProp('_CIPCode')))
+        elif includeUnassigned and atom.HasProp('_ChiralityPossible'):
+            centers.append((atom.GetIdx(), '?'))
+    return centers
+
 
 #------------------------------------
 #
 #  doctest boilerplate
 #
 def _test():
-  import doctest,sys
-  return doctest.testmod(sys.modules["__main__"])
-
+    import sys
+    import doctest
+    return doctest.testmod(sys.modules["__main__"])
 
 if __name__ == '__main__':
-  import sys
-  failed,tried = _test()
-  sys.exit(failed)
+    import sys
+    failed, tried = _test()
+    sys.exit(failed)

@@ -21,7 +21,11 @@
 // A helper function for dealing with errors. Throw a Python IndexError
 RDKIT_WRAP_DECL void throw_index_error(int key)
 {
-  PyErr_SetObject(PyExc_IndexError, PyInt_FromLong(key));
+  #if PY_MAJOR_VERSION >= 3
+    PyErr_SetObject(PyExc_IndexError, PyLong_FromLong(key));
+  #else
+    PyErr_SetObject(PyExc_IndexError, PyInt_FromLong(key));
+  #endif
   python::throw_error_already_set();
 }
 

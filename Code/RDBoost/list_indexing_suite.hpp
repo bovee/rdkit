@@ -233,7 +233,11 @@ namespace boost { namespace python {
 	  idx++;
 	}
 	if(pos==container.end()){
-	  PyErr_SetObject(PyExc_IndexError,PyInt_FromLong(i));
+	  #if PY_MAJOR_VERSION >= 3
+	    PyErr_SetObject(PyExc_IndexError,PyLong_FromLong(i));
+	  #else
+	    PyErr_SetObject(PyExc_IndexError,PyInt_FromLong(i));
+	  #endif
 	  python::throw_error_already_set();
 	}
 	return pos;

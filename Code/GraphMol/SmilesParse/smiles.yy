@@ -1,4 +1,4 @@
-%pure_parser
+%pure-parser
 
 %{
 
@@ -22,7 +22,7 @@
 
 extern int yysmiles_lex(YYSTYPE *,void *);
 
-#define YYDEBUG 1
+// #define YYDEBUG 1
 #define YYLEX_PARAM scanner
 
 void
