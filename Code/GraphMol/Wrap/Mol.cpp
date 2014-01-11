@@ -73,7 +73,11 @@ namespace RDKit {
     PyObject *res = PyTuple_New(matches.size());
     MatchVectType::const_iterator i;
     for(i=matches.begin();i!=matches.end();i++){
-      PyTuple_SetItem(res,i->first,PyInt_FromLong(i->second));
+      #if PY_MAJOR_VERSION >= 3
+        PyTuple_SetItem(res,i->first,PyLong_FromLong(i->second));
+      #else
+        PyTuple_SetItem(res,i->first,PyInt_FromLong(i->second));
+      #endif
     }
     return res;
   }

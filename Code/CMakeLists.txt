@@ -22,7 +22,7 @@ else(RDK_BIG_ENDIAN)
   add_subdirectory(SimDivPickers)
 endif(RDK_BIG_ENDIAN)
 
-add_subdirectory(ML)
+#add_subdirectory(ML)
 add_subdirectory(ChemicalFeatures)
 
 if(RDK_BUILD_SWIG_WRAPPERS)

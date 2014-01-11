@@ -25,7 +25,11 @@ namespace RDKit {
     MolChemicalFeature::AtomPtrContainer_CI aci;
     int idx=0;
     for (aci = atoms.begin(); aci != atoms.end(); ++aci) {
-      PyTuple_SetItem(res,idx,PyInt_FromLong((*aci)->getIdx()));
+      #if PY_MAJOR_VERSION >= 3
+        PyTuple_SetItem(res,idx,PyLong_FromLong((*aci)->getIdx()));
+      #else
+        PyTuple_SetItem(res,idx,PyInt_FromLong((*aci)->getIdx()));
+      #endif
       idx++;
     }
     return res;

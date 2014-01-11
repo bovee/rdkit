@@ -124,8 +124,13 @@ namespace RDKit {
         if(!PySequence_Check(entry) || PySequence_Size(entry)!=3){
           throw_value_error("weights argument must be a sequence of 3-sequences");
         }
-        int idx1=PyInt_AsLong(PySequence_GetItem(entry,0));
-        int idx2=PyInt_AsLong(PySequence_GetItem(entry,1));
+        #if PY_MAJOR_VERSION >= 3
+          int idx1=PyLong_AsLong(PySequence_GetItem(entry,0));
+          int idx2=PyLong_AsLong(PySequence_GetItem(entry,1));
+	#else
+          int idx1=PyInt_AsLong(PySequence_GetItem(entry,0));
+          int idx2=PyInt_AsLong(PySequence_GetItem(entry,1));
+	#endif
         double w=PyFloat_AsDouble(PySequence_GetItem(entry,2));
         weightMap[std::make_pair(idx1,idx2)]=w;
       }

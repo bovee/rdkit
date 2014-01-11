@@ -1,4 +1,3 @@
-%pure-parser
 
 %{
 
@@ -22,8 +21,7 @@
 
 extern int yysmiles_lex(YYSTYPE *,void *);
 
-// #define YYDEBUG 1
-#define YYLEX_PARAM scanner
+#define YYDEBUG 1
 
 void
 yysmiles_error( const char *input,
@@ -48,6 +46,8 @@ namespace {
 
 %}
 
+%define api.pure
+%lex-param   {yyscan_t *scanner}
 %parse-param {const char *input}
 %parse-param {std::vector<RDKit::RWMol *> *molList}
 %parse-param {std::list<unsigned int> *branchPoints}
